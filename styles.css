@@ -1,0 +1,10 @@
+form, .card {
+    margin-bottom: 20px;
+}
+
+div.jumbotron {
+    background-color: darkblue;
+    color: white;
+    font-weight: 300;
+    text-align: center;
+}
