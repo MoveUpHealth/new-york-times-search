@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <title>Hello, world!</title>
+  </head>
+  <body>
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+          <h1 class="display-4">New York Times Search</h1>
+        </div>
+      </div>
+
+      <div class="container">
+      <form>
+      <div class="form-group">
+        <label for="keywords">Keywords</label>
+        <input type="text" class="form-control" id="keywords" placeholder="Enter search here">
+      </div>
+      <div class="form-group">
+        <label for="search-limit">Example select</label>
+        <select class="form-control" id="limitSelector">
+          <option>1</option>
+          <option>3</option>
+          <option>5</option>
+          <option>10</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="startYear">Start Year (optional)</label>
+        <input type="text" class="form-control" id="startYear" placeholder="YYYY">
+      </div>
+      <div class="form-group">
+        <label for="endYear">End Year (optional)</label>
+        <input type="text" class="form-control" id="endYear" placeholder="YYYY">
+      </div>
+      <button class="btn btn-primary btn-search">Submit</button>
+      <button class="btn btn-primary btn-clear" style="display: inline;">Clear Search</button>
+      </form>
+      </div>
+      <div class="search-results">
+
+      </div>
+      <script type="text/javascript">
+        $(".btn-search").on("click", function(e) {
+            e.preventDefault()
+            $('.search-results').empty()
+        })
+         $(".btn-search").on("click", function(e) {
+             e.preventDefault()
+             $('.search-results').empty()
+          var apiKey = '04uTPjbkMKWQxy9CIOskQv50dOdJe5uV'
+          var searchWord =  $('#keywords').val()
+          var limit = $('#limitSelector').val()
+          var start = $('#startYear').val()
+          var end = $('#endYear').val()
+          var newQuery = '&fq=pub_year:'
+          
+          var queryURL = 'https://api.nytimes.com/svc/search/v2/articlesearch.json?q=' + searchWord + '&api-key=' + apiKey
+
+          if(start > 1600 ){    
+            var queryURL = 'https://api.nytimes.com/svc/search/v2/articlesearch.json?q=' + searchWord + newQuery + start + '&api-key=' + apiKey
+          }
+          if(end > 1600 ){    
+            var queryURL = 'https://api.nytimes.com/svc/search/v2/articlesearch.json?q=' + searchWord + newQuery + end + '&api-key=' + apiKey
+          }
+
+          console.log(start)
+          
+          $.ajax({
+              url: queryURL,
+              method: "GET"
+          })
+          .then(function(response){
+              console.log(response)
+              var results = response.response.docs
+              console.log(results)
+              console.log(limit)
+            for (var i =0; i < limit; i++ ){
+              var newArticle = $("<div>")
+              var title = $('<h5>').text(results[i].headline.main)
+              var abstract = $('<p>').text(results[i].abstract)
+                abstract.attr("class", "card-text")
+                title.attr("class", "card-title")
+                newArticle.append(title)
+                newArticle.append(abstract)
+                newArticle.attr("class", 'card-body')
+                
+                $('.search-results').prepend(newArticle)
+                
+
+              }
+          })
+
+         })
+      </script>
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+
+   
+  </body>
+</html>
